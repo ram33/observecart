@@ -1,5 +1,4 @@
 .env
 observecart-backend/cart-service/.env 
 observecart-backend/order-service/.env 
-observecart-frontend/newrelic.js
 newrelic-infra/newrelic-infra.yml

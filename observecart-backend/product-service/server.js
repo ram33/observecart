@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const winston = require('winston');
 const ProductSchema = require('./models/Product');
 const seedProducts = require('./seedProducts');
-require('newrelic');
 require('dotenv').config();
 
 const app = express();

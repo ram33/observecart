@@ -1,7 +1,6 @@
 const express = require('express');
 const kafka = require('kafka-node');
 const winston = require('winston');
-require('newrelic');
 require('dotenv').config();
 
 const app = express();

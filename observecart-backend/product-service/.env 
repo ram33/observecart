@@ -1,4 +1,0 @@
-PORT=3003
-MONGODB_URI=mongodb://mongodb:27017/observecart
-REDIS_URI=redis://redis:6379
-KAFKA_BROKERS=kafka:9092

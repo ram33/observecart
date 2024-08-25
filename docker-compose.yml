@@ -4,6 +4,9 @@ services:
     build: ./observecart-frontend
     ports:
       - '3000:3000'
+    environment:
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+      - JWT_SECRET=your_jwt_secret_here
 
   product-service:
     build: ./observecart-backend/product-service
@@ -12,11 +15,9 @@ services:
     environment:
       - PORT=3001
       - MONGODB_URI=mongodb://mongodb:27017/observecart
-      - NEW_RELIC_NO_CONFIG_FILE=true
-      - NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
-      - NEW_RELIC_LOG=stdout
+      - KAFKA_BROKERS=kafka:9092
+      - REDIS_URI=redis://redis:6379
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
-      - NEW_RELIC_APP_NAME=product-service
     depends_on:
       - mongodb
 
@@ -26,12 +27,10 @@ services:
       - '3002:3002'
     environment:
       - PORT=3002
+      - MONGODB_URI=mongodb://mongodb:27017/observecart
+      - KAFKA_BROKERS=kafka:9092
       - REDIS_URI=redis://redis:6379
-      - NEW_RELIC_NO_CONFIG_FILE=true
-      - NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
-      - NEW_RELIC_LOG=stdout
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
-      - NEW_RELIC_APP_NAME=cart-service
     depends_on:
       - redis
 
@@ -41,12 +40,10 @@ services:
       - '3003:3003'
     environment:
       - PORT=3003
+      - MONGODB_URI=mongodb://mongodb:27017/observecart
       - KAFKA_BROKERS=kafka:9092
-      - NEW_RELIC_NO_CONFIG_FILE=true
-      - NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
-      - NEW_RELIC_LOG=stdout
+      - REDIS_URI=redis://redis:6379
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
-      - NEW_RELIC_APP_NAME=order-service
     depends_on:
       - kafka
 
@@ -57,12 +54,10 @@ services:
     environment:
       - PORT=3004
       - MONGODB_URI=mongodb://mongodb:27017/observecart
-      - JWT_SECRET=your_jwt_secret_here
-      - NEW_RELIC_NO_CONFIG_FILE=true
-      - NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
-      - NEW_RELIC_LOG=stdout
+      - KAFKA_BROKERS=kafka:9092
+      - REDIS_URI=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
-      - NEW_RELIC_APP_NAME=user-service
     depends_on:
       - mongodb
 
