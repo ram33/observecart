@@ -7,20 +7,25 @@ import Document, {
   NextScript,
 } from "next/document";
 
-class MyDocument extends Document {
-  static async getInitialProps(
-    ctx
-  ) {
-    const initialProps = await Document.getInitialProps(ctx);
+class RootDocument extends Document {
+  static async getInitialProps(context) {
+    const initialProps = await Document.getInitialProps(context)
+
+    if (newrelic.agent.collector.isConnected() === false) {
+      await new Promise((resolve) => {
+        newrelic.agent.on("connected", resolve)
+      })
+    }
 
     const browserTimingHeader = newrelic.getBrowserTimingHeader({
       hasToRemoveScriptWrapper: true,
-    });
+      allowTransactionlessInjection: true,
+    })
 
     return {
       ...initialProps,
       browserTimingHeader,
-    };
+    }
   }
 
   render() {
@@ -37,8 +42,8 @@ class MyDocument extends Document {
           <NextScript />
         </body>
       </Html>
-    );
+    )
   }
 }
 
-export default MyDocument;
+export default RootDocument;

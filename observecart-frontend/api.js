@@ -30,4 +30,4 @@ export const clearCart = (userId) =>
   axios.delete(`/api/cart/${userId}`);
 
 export const placeOrder = (userId, cart) =>
-  axios.post(`${API_URL}/orders`, { userId, cart })
+  axios.post(`${API_URL}/orders`, { userId, cartItems: cart })

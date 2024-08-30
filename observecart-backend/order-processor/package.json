@@ -1,0 +1,16 @@
+{
+  "name": "order-processor-service",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node -r newrelic server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "kafkajs": "^2.1.0",
+    "axios": "^0.21.1",
+    "dotenv": "^10.0.0",
+    "winston": "^3.3.3",
+    "newrelic": "latest"
+  }
+}

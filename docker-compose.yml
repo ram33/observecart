@@ -61,6 +61,24 @@ services:
     depends_on:
       - mongodb
 
+  order-processor:
+    build: ./observecart-backend/order-processor
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - INVENTORY_SERVICE_URL=http://inventory-service:3005
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+    depends_on:
+      - kafka
+
+  ingest-processor:
+    build: ./observecart-backend/ingest-processor
+    environment:
+      - FRONTEND_URL=http://frontend:3000
+      - TEST_USERNAME=${TEST_USER_ID}
+      - TEST_PASSWORD=${TEST_USER_PASSWORD}
+    depends_on:
+      - frontend
+
   mongodb:
     image: mongo:latest
     ports:

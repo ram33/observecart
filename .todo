@@ -1,0 +1,5 @@
+ObserveCart:
+  ✔ Browser data is not being instrumented @done(24-08-26 22:36)
+  ✔ Ingest some test data via playwright @done(24-08-30 20:10)
+  ☐ Kafka is not instrumented
+  ☐ Integreate with github actions for auto deployments
