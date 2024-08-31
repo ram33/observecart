@@ -3,3 +3,4 @@ observecart-backend/cart-service/.env
 observecart-backend/order-service/.env 
 newrelic-infra/newrelic-infra.yml
 observecart.pem
+mongodb_data
