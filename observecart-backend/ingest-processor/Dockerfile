@@ -10,4 +10,4 @@ RUN npx playwright install --with-deps
 
 COPY . .
 
-CMD ["node", "processor.js"]
+CMD ["npm", "start"]
