@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   frontend:
     build: ./observecart-frontend
@@ -7,6 +7,8 @@ services:
     environment:
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
       - JWT_SECRET=your_jwt_secret_here
+    networks:
+      - internal
 
   product-service:
     build: ./observecart-backend/product-service
@@ -20,6 +22,8 @@ services:
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
     depends_on:
       - mongodb
+    networks:
+      - internal
 
   cart-service:
     build: ./observecart-backend/cart-service
@@ -33,6 +37,8 @@ services:
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
     depends_on:
       - redis
+    networks:
+      - internal
 
   order-service:
     build: ./observecart-backend/order-service
@@ -46,6 +52,8 @@ services:
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
     depends_on:
       - kafka
+    networks:
+      - internal
 
   user-service:
     build: ./observecart-backend/user-service
@@ -60,6 +68,8 @@ services:
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
     depends_on:
       - mongodb
+    networks:
+      - internal
 
   order-processor:
     build: ./observecart-backend/order-processor
@@ -69,6 +79,8 @@ services:
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
     depends_on:
       - kafka
+    networks:
+      - internal
 
   ingest-processor:
     build: ./observecart-backend/ingest-processor
@@ -79,26 +91,31 @@ services:
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
     depends_on:
       - frontend
+    networks:
+      - internal
 
   mongodb:
     image: mongo:latest
-    ports:
-      - '27017:27017'
+    restart: unless-stopped
     volumes:
       - ./mongodb_data:/data/db
+    networks:
+      - internal
 
   redis:
     image: redis:latest
-    ports:
-      - '6379:6379'
     volumes:
       - redis_data:/data
+    networks:
+      - internal
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - internal
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -107,12 +124,12 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    ports:
-      - '29092:29092'
+    networks:
+      - internal
 
   agent:
     container_name: newrelic-infra
@@ -126,5 +143,10 @@ services:
       - '/:/host:ro'
       - '/var/run/docker.sock:/var/run/docker.sock'
     restart: unless-stopped
+
 volumes:
   redis_data:
+
+networks:
+  internal:
+    driver: bridge
