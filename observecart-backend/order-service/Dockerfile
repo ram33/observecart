@@ -1,13 +1,27 @@
-FROM node:20
+# Use a Maven image to build the application
+FROM maven:3.8.7-eclipse-temurin-17 AS build
 
-WORKDIR /usr/src/app
+# Set the working directory for the build
+WORKDIR /app
 
-COPY package*.json ./
+# Copy the pom.xml and source code into the container
+COPY pom.xml .
+COPY src ./src
 
-RUN npm install
+# Build the application
+RUN mvn clean package -DskipTests
 
-COPY . .
+# Use an OpenJDK runtime as a parent image for the final image
+FROM openjdk:17-jdk-slim
 
-EXPOSE 3002
+# Set the working directory inside the container
+WORKDIR /app
 
-CMD ["npm", "start"]
+# Copy the built jar file from the build stage
+COPY --from=build /app/target/order-service-1.0.0.jar app.jar
+
+# Expose the port the app runs on
+EXPOSE 3003
+
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -45,6 +45,7 @@ services:
     ports:
       - '3003:3003'
     environment:
+      - SPRING_PROFILES_ACTIVE=prod
       - PORT=3003
       - MONGODB_URI=mongodb://mongodb:27017/observecart
       - KAFKA_BROKERS=kafka:9092

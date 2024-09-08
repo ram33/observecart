@@ -54,6 +54,7 @@ const run = async () => {
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
+      console.log("Consumer Message: ", message.value.toString());
       const order = JSON.parse(message.value.toString());
       await processOrder(order);
     },
