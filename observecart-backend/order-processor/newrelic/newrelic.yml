@@ -19,7 +19,10 @@ common: &default_settings
   # Use this setting to disable the agent instead of removing it from the startup command.
   # Default is true.
   agent_enabled: true
-  kafka.metrics.as_events.enabled: true
+  kafka:
+    metrics:
+      as_events:
+        enabled: true
 
 
   # Set the name of your application as you'd like it show up in New Relic.
@@ -348,9 +351,16 @@ common: &default_settings
       org.springframework.data.convert.ClassGeneratingEntityInstantiator$ObjectInstantiatorClassGenerator,
       org.mvel2.optimizers.impl.asm.ASMAccessorOptimizer$ContextClassLoader,
       gw.internal.gosu.compiler.SingleServingGosuClassLoader,
+    
     kafka-clients-metrics:
       enabled: false
     kafka-clients-node-metrics:
+      enabled: true
+    kafka-clients-config:
+      enabled: true
+    kafka-streams-spans:
+      enabled: true
+    kafka-connect-spans:
       enabled: true
   # Real-time profiling using Java Flight Recorder (JFR).
   # This feature reports dimensional metrics to the ingest endpoint configured by
