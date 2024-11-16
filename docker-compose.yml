@@ -40,6 +40,36 @@ services:
     networks:
       - internal
 
+  inventory-service:
+    build: ./observecart-backend/inventory-service
+    ports:
+      - '3005:3005'
+    environment:
+      - PORT=3005
+      - MONGODB_URI=mongodb://mongodb:27017/observecart
+      - KAFKA_BROKERS=kafka:9092
+      - REDIS_URI=redis://redis:6379
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+    depends_on:
+      - redis
+    networks:
+      - internal
+
+  location-service:
+    build: ./observecart-backend/location-service
+    ports:
+      - '3006:3006'
+    environment:
+      - PORT=3006
+      - MONGODB_URI=mongodb://mongodb:27017/observecart
+      - KAFKA_BROKERS=kafka:9092
+      - REDIS_URI=redis://redis:6379
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+    depends_on:
+      - redis
+    networks:
+      - internal
+
   order-service:
     build: ./observecart-backend/order-service
     ports:

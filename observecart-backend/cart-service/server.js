@@ -1,6 +1,7 @@
 const express = require('express');
 const Redis = require('ioredis');
 const winston = require('winston');
+const axios = require('axios');
 require('dotenv').config();
 
 const app = express();
@@ -36,6 +37,17 @@ app.use(express.json());
 app.post('/cart/add', async (req, res) => {
   try {
     const { userId, productId, quantity } = req.body;
+
+    try {
+      const inventoryResponse = await axios.get(`http://inventory-service:3005/check/${productId}?quantity=${quantity}`);
+      if (!inventoryResponse.data.available) {
+        return res.status(400).json({ message: 'Insufficient inventory' });
+      }
+    } catch (error) {
+      logger.error('Error checking inventory:', error);
+      return res.status(503).json({ message: 'Unable to verify inventory' });
+    }
+
     const cartKey = `cart:${userId}`;
 
     let cart = JSON.parse(await redisClient.get(cartKey) || '{}');
